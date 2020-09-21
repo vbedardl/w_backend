@@ -1,0 +1,22 @@
+type User {
+  id: ID! @id
+  name: String!
+  email: String! @unique
+  password: String!
+  phone: String
+  packages: [Package!]! @relation(name:"PackageToUser",onDelete:CASCADE)
+  unit: Unit! @relation(name:"UnitToUser", onDelete:SET_NULL)
+}
+
+type Package {
+  id: ID! @id
+  owner: [User!]! @relation(name:"PackageToUser",onDelete:SET_NULL)
+  pickedUp: Boolean!
+  createdAt: DateTime! @createdAt
+}
+
+type Unit {
+  id: ID! @id
+  name: String! @unique
+  residents: [User!]! @relation(name:"UnitToUser",onDelete:SET_NULL)
+}

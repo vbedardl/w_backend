@@ -1,0 +1,72 @@
+type Query {
+  packages(first: Int, skip: Int, after: String): [Package!]!
+  users(query: String, first: Int, skip: Int, after: String): [User!]!
+  me: User!
+  myPackages(first: Int, skip: Int, after: String): [Package!]!
+  units: [Unit!]!
+}
+
+type Mutation {
+  createUser(name: String!, email: String!, password: String!, unit: ID!): User!
+  login(data: loginUserInput!): AuthPayload!
+  deleteUser(id: ID!): User!
+  updateUser(data: UpdateUserInput!): User!
+
+  createPackage(data: CreatePackageInput!): Package!
+  deletePackage(id: ID!): Package!
+  updatePackage(id: ID!, data: UpdatePostInput!): Package!
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
+input CreateUserInput {
+  name: String
+  email: String!
+  password: String!
+  unit: ID!
+}
+
+input UpdateUserInput {
+  name: String
+  email: String
+  password: String
+  phone: String
+}
+
+input loginUserInput {
+  email: String!
+  password: String!
+}
+
+input CreatePackageInput {
+  owner: ID!
+}
+
+input UpdatePostInput {
+  pickedUp: Boolean!
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String
+  password: String!
+  unit: Unit!
+  packages: [Package!]!
+}
+
+type Package {
+  id: ID!
+  owner: User!
+  pickedUp: Boolean!
+  createdAt: String!
+}
+
+type Unit {
+  id: ID!
+  name: String!
+  residents: [User!]!
+}
