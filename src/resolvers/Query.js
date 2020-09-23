@@ -16,30 +16,35 @@ const Query = {
       orderBy: args.orderBy,
     };
 
-    if (args.query) {
-      opArgs.where = {
-        OR: [
-          {
-            name_contains: args.query,
-          },
-        ],
-      };
-    }
+    opArgs.where = {
+      AND: [
+        {
+          name_not_contains: "Admin",
+        },
+        {
+          name_not_contains: "Carrier",
+        },
+      ],
+    };
+
     return prisma.query.users(opArgs, info);
   },
   myPackages(parent, args, { prisma, request }, info) {
-    const userId = getUserId(request, false);
-
+    //const userId = getUserId(request, false);
+    console.log("the args:", args);
     const opArgs = {
       first: args.first,
       skip: args.skip,
       after: args.after,
       where: {
         owner: {
-          id: userId,
+          id: args.id,
         },
       },
     };
+    if (args.pickedUp) {
+      opArgs.where.pickedUp = !args.pickedUp;
+    }
     return prisma.query.packages(opArgs, info);
   },
   packages(parent, args, { prisma }, info) {
@@ -49,10 +54,7 @@ const Query = {
       after: args.after,
     };
     opArgs.where = { pickedUp: false };
-    return prisma.query.packages(
-      opArgs,
-      "{id createdAt pickedUp owner {name unit{name}} }"
-    );
+    return prisma.query.packages(opArgs, info);
   },
 
   me(parent, args, { prisma, request }, info) {

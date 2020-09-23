@@ -2,15 +2,27 @@ type Query {
   packages(first: Int, skip: Int, after: String): [Package!]!
   users(query: String, first: Int, skip: Int, after: String): [User!]!
   me: User!
-  myPackages(first: Int, skip: Int, after: String): [Package!]!
+  myPackages(
+    first: Int
+    skip: Int
+    after: String
+    id: ID
+    pickedUp: Boolean
+  ): [Package!]!
   units: [Unit!]!
 }
 
 type Mutation {
   createUser(name: String!, email: String!, password: String!, unit: ID!): User!
-  login(data: loginUserInput!): AuthPayload!
+  login(email: String!, password: String!): AuthPayload!
   deleteUser(id: ID!): User!
-  updateUser(data: UpdateUserInput!): User!
+  updateUser(
+    id: ID!
+    name: String
+    email: String
+    password: String
+    phone: String
+  ): User!
 
   createPackage(data: CreatePackageInput!): Package!
   deletePackage(id: ID!): Package!
@@ -34,11 +46,6 @@ input UpdateUserInput {
   email: String
   password: String
   phone: String
-}
-
-input loginUserInput {
-  email: String!
-  password: String!
 }
 
 input CreatePackageInput {
@@ -69,4 +76,8 @@ type Unit {
   id: ID!
   name: String!
   residents: [User!]!
+}
+
+type Subscription {
+  package(userId: ID!): Package!
 }

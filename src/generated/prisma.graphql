@@ -62,7 +62,7 @@ interface Node {
 
 type Package implements Node {
   id: ID!
-  owner(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
+  owner: User!
   pickedUp: Boolean!
   createdAt: DateTime!
 }
@@ -80,7 +80,7 @@ type PackageConnection {
 input PackageCreateInput {
   id: ID
   pickedUp: Boolean!
-  owner: UserCreateManyWithoutPackagesInput
+  owner: UserCreateOneWithoutPackagesInput!
 }
 
 input PackageCreateManyWithoutOwnerInput {
@@ -233,7 +233,7 @@ input PackageSubscriptionWhereInput {
 
 input PackageUpdateInput {
   pickedUp: Boolean
-  owner: UserUpdateManyWithoutPackagesInput
+  owner: UserUpdateOneRequiredWithoutPackagesInput
 }
 
 input PackageUpdateManyDataInput {
@@ -351,9 +351,7 @@ input PackageWhereInput {
 
   """All values greater than or equal the given value."""
   createdAt_gte: DateTime
-  owner_every: UserWhereInput
-  owner_some: UserWhereInput
-  owner_none: UserWhereInput
+  owner: UserWhereInput
 }
 
 input PackageWhereUniqueInput {
@@ -647,14 +645,14 @@ input UserCreateInput {
   unit: UnitCreateOneWithoutResidentsInput!
 }
 
-input UserCreateManyWithoutPackagesInput {
-  create: [UserCreateWithoutPackagesInput!]
-  connect: [UserWhereUniqueInput!]
-}
-
 input UserCreateManyWithoutUnitInput {
   create: [UserCreateWithoutUnitInput!]
   connect: [UserWhereUniqueInput!]
+}
+
+input UserCreateOneWithoutPackagesInput {
+  create: UserCreateWithoutPackagesInput
+  connect: UserWhereUniqueInput
 }
 
 input UserCreateWithoutPackagesInput {
@@ -976,18 +974,6 @@ input UserUpdateManyMutationInput {
   phone: String
 }
 
-input UserUpdateManyWithoutPackagesInput {
-  create: [UserCreateWithoutPackagesInput!]
-  connect: [UserWhereUniqueInput!]
-  set: [UserWhereUniqueInput!]
-  disconnect: [UserWhereUniqueInput!]
-  delete: [UserWhereUniqueInput!]
-  update: [UserUpdateWithWhereUniqueWithoutPackagesInput!]
-  updateMany: [UserUpdateManyWithWhereNestedInput!]
-  deleteMany: [UserScalarWhereInput!]
-  upsert: [UserUpsertWithWhereUniqueWithoutPackagesInput!]
-}
-
 input UserUpdateManyWithoutUnitInput {
   create: [UserCreateWithoutUnitInput!]
   connect: [UserWhereUniqueInput!]
@@ -1003,6 +989,13 @@ input UserUpdateManyWithoutUnitInput {
 input UserUpdateManyWithWhereNestedInput {
   where: UserScalarWhereInput!
   data: UserUpdateManyDataInput!
+}
+
+input UserUpdateOneRequiredWithoutPackagesInput {
+  create: UserCreateWithoutPackagesInput
+  connect: UserWhereUniqueInput
+  update: UserUpdateWithoutPackagesDataInput
+  upsert: UserUpsertWithoutPackagesInput
 }
 
 input UserUpdateWithoutPackagesDataInput {
@@ -1021,18 +1014,12 @@ input UserUpdateWithoutUnitDataInput {
   packages: PackageUpdateManyWithoutOwnerInput
 }
 
-input UserUpdateWithWhereUniqueWithoutPackagesInput {
-  where: UserWhereUniqueInput!
-  data: UserUpdateWithoutPackagesDataInput!
-}
-
 input UserUpdateWithWhereUniqueWithoutUnitInput {
   where: UserWhereUniqueInput!
   data: UserUpdateWithoutUnitDataInput!
 }
 
-input UserUpsertWithWhereUniqueWithoutPackagesInput {
-  where: UserWhereUniqueInput!
+input UserUpsertWithoutPackagesInput {
   update: UserUpdateWithoutPackagesDataInput!
   create: UserCreateWithoutPackagesInput!
 }

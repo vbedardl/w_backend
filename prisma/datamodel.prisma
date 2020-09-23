@@ -10,7 +10,7 @@ type User {
 
 type Package {
   id: ID! @id
-  owner: [User!]! @relation(name:"PackageToUser",onDelete:SET_NULL)
+  owner: User! @relation(name:"PackageToUser",onDelete:SET_NULL)
   pickedUp: Boolean!
   createdAt: DateTime! @createdAt
 }
