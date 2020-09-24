@@ -1,7 +1,7 @@
 const Subscription = {
   package: {
-    subscribe(parent, args, { pubsub }, info) {
-      return pubsub.asyncIterator("Package");
+    subscribe(parent, { userId }, { prisma, pubsub }, info) {
+      return pubsub.asyncIterator("package");
     },
   },
 };

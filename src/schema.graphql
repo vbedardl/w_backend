@@ -24,7 +24,7 @@ type Mutation {
     phone: String
   ): User!
 
-  createPackage(data: CreatePackageInput!): Package!
+  createPackage(owner: ID!): Package!
   deletePackage(id: ID!): Package!
   updatePackage(id: ID!, data: UpdatePostInput!): Package!
 }
@@ -79,5 +79,5 @@ type Unit {
 }
 
 type Subscription {
-  package(userId: ID!): Package!
+  package: Package!
 }

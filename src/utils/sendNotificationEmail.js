@@ -1,38 +1,21 @@
-const nodeMailer = require("nodemailer");
 const dotenv = require("dotenv");
-const xoauth2 = require("xoauth2");
 dotenv.config();
 
-const sendNotificationEmail = (user, email) => {
-  console.log(`nodeMailer : Sent to email: ${email}`);
-  console.log(
-    `Hi ${user}, a package is ready for you to pick up at reception.`
-  );
+var accountSid = "AC12a95fa05626623848fca57b0c7e3c94";
+var authToken = "cfea809a9bd3e33141d5618448dc849c";
 
-  // let transporter = nodeMailer.createTransport({
-  //   host: "smtp.gmail.com",
-  //   port: 465,
-  //   secure: true,
-  //   auth: {
-  //     type: "OAuth2",
-  //     user: process.env.USERMAIL,
-  //     clientId: process.env.GOOGLE_CLIENT_ID,
-  //     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  //     refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
-  //     accessToken: process.env.GOOGLE_ACCESS_TOKEN,
-  //   },
-  // });
-  // let mailOptions = {
-  //   from: process.env.USERMAIL,
-  //   to: email,
-  //   subject: "Welcome to Walter, Here is your temporary password",
-  //   text: password,
-  // };
-  // transporter.sendMail(mailOptions, (error) => {
-  //   if (error) {
-  //     return console.log("message wasnt sent:", error);
-  //   }
-  // });
+var twilio = require("twilio");
+var client = new twilio(accountSid, authToken);
+const sendNotificationEmail = (email, user) => {
+  console.log(`nodeMailer : sent to email: ${email}`);
+
+  client.messages
+    .create({
+      body: `Hi ${user}, a package is ready for you to pick up at reception.`,
+      to: "+14385807252", // Text this number
+      from: "+17787701746", // From a valid Twilio number
+    })
+    .then((message) => console.log(message.sid));
 };
 
 export { sendNotificationEmail as default };

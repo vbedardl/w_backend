@@ -53,7 +53,7 @@ const Mutation = {
       token: generateToken(user.id, user.unit.name),
     };
   },
-  async deleteUser(parent, args, { prisma, request }, info) {
+  async deleteUser(parent, args, { prisma, request, pubsub }, info) {
     const isAdmin = userIsAdmin(request);
     if (!isAdmin) {
       throw new Error("Admin access required");
@@ -98,10 +98,10 @@ const Mutation = {
     return prisma.mutation.updateUser(opArgs, info);
   },
   async createPackage(parent, args, { prisma, request, pubsub }, info) {
-    const isCarrier = userIsCarrier(request);
-    if (!isCarrier) {
-      throw new Error("Carrier access required");
-    }
+    // const isCarrier = userIsCarrier(request);
+    // if (!isCarrier) {
+    //   throw new Error("Carrier access required");
+    // }
 
     const pack = await prisma.mutation.createPackage(
       {
@@ -109,18 +109,19 @@ const Mutation = {
           pickedUp: false,
           owner: {
             connect: {
-              id: args.data.owner,
+              id: args.owner,
             },
           },
         },
       },
       info
     );
-    const owner = await prisma.query.users({ where: { id: args.data.owner } });
+    const owner = await prisma.query.users({ where: { id: args.owner } });
 
     if (!pack) {
       throw new Error("Couldnt create a package");
     }
+    pubsub.publish("package", { package: pack });
 
     sendNotificationEmail(owner[0].name, owner[0].email);
     return pack;
