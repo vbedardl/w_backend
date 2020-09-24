@@ -1,19 +1,23 @@
 const dotenv = require("dotenv");
 dotenv.config();
+const twilio = require("twilio");
 
-var accountSid = "AC12a95fa05626623848fca57b0c7e3c94";
-var authToken = "cfea809a9bd3e33141d5618448dc849c";
+const accountSid = process.env.TWILIO_SID;
+const authToken = process.env.TWILIO_AUTHTOKEN;
 
-var twilio = require("twilio");
-var client = new twilio(accountSid, authToken);
-const sendNotificationEmail = (email, user) => {
-  console.log(`nodeMailer : sent to email: ${email}`);
+const client = new twilio(accountSid, authToken);
+const cleanPhone = (phone) => {
+  return phone.trim().replace(/[- )(]/g, "");
+};
+
+const sendNotificationEmail = (owner, id) => {
+  const { name, phone } = owner;
 
   client.messages
     .create({
-      body: `Hi ${user}, a package is ready for you to pick up at reception.`,
-      to: "+14385807252", // Text this number
-      from: "+17787701746", // From a valid Twilio number
+      body: `Hi ${name}, a package is ready for you to pick up at reception.Pickup code: ${id}`,
+      to: `${cleanPhone(phone)}`,
+      from: "+17787701746",
     })
     .then((message) => console.log(message.sid));
 };

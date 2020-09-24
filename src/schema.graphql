@@ -13,7 +13,13 @@ type Query {
 }
 
 type Mutation {
-  createUser(name: String!, email: String!, password: String!, unit: ID!): User!
+  createUser(
+    name: String!
+    email: String!
+    password: String!
+    unit: ID!
+    phone: String!
+  ): User!
   login(email: String!, password: String!): AuthPayload!
   deleteUser(id: ID!): User!
   updateUser(
@@ -34,24 +40,6 @@ type AuthPayload {
   user: User!
 }
 
-input CreateUserInput {
-  name: String
-  email: String!
-  password: String!
-  unit: ID!
-}
-
-input UpdateUserInput {
-  name: String
-  email: String
-  password: String
-  phone: String
-}
-
-input CreatePackageInput {
-  owner: ID!
-}
-
 input UpdatePostInput {
   pickedUp: Boolean!
 }
@@ -62,6 +50,7 @@ type User {
   email: String
   password: String!
   unit: Unit!
+  phone: String!
   packages: [Package!]!
 }
 
@@ -76,8 +65,4 @@ type Unit {
   id: ID!
   name: String!
   residents: [User!]!
-}
-
-type Subscription {
-  package: Package!
 }

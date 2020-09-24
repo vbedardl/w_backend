@@ -1,9 +1,3 @@
-const Subscription = {
-  package: {
-    subscribe(parent, { userId }, { prisma, pubsub }, info) {
-      return pubsub.asyncIterator("package");
-    },
-  },
-};
+const Subscription = {};
 
 export { Subscription as default };

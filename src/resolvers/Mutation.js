@@ -29,7 +29,7 @@ const Mutation = {
     if (!user) {
       throw new Error("User couldnt be created");
     }
-    sendOnBoardingEmail(args.email, args.password);
+    sendOnBoardingEmail(args);
     return user;
   },
   async login(parent, args, { prisma }, info) {
@@ -121,9 +121,7 @@ const Mutation = {
     if (!pack) {
       throw new Error("Couldnt create a package");
     }
-    pubsub.publish("package", { package: pack });
-
-    sendNotificationEmail(owner[0].name, owner[0].email);
+    sendNotificationEmail(owner[0], pack.id);
     return pack;
   },
   async deletePackage(parent, args, { prisma, request }, info) {
@@ -138,7 +136,7 @@ const Mutation = {
       },
     });
     if (!packageExists) {
-      throw new Error("Unable to delete post.");
+      throw new Error("Unable to delete package.");
     }
 
     return prisma.mutation.deletePackage(

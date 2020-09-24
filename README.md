@@ -61,6 +61,5 @@ query { units { id name residents { name }}}
 
 ## Further Development
 
-- Twilio was added to send sms as notification. The database and the whole workflow need to change email for phone.
 - Integrate RabbitMQ with twilio sms system
 - Adding subscription to package creation, user deletion, package update.
